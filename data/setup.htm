@@ -1,0 +1,67 @@
+<!-- Page to setup SMS server -->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Configuration du serveur SMS</title>
+		<link rel="stylesheet" href="style.css" type="text/css" />
+		<script src="translate.js"></script>
+		<script src="logic.js"></script>
+	</head>
+	<body onload="initAll(true);">
+		<!-- Language selector (default to user's first prefered language matching those available (en,fr), (en) else) -->
+		<div>
+			<label data-i18n-key="languageSelector">Language </label>&nbsp;
+			<select data-i18n-switcher class="locale-switcher">
+				<option value="en">English</option>
+				<option value="fr">Français</option>
+			</select>
+		</div>
+		<div>
+			<!-- Display and set various variables saved settings.json -->
+			<hr />
+			<label data-i18n-key="serverLanguage">Server language</label>
+			    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" id="serverLanguage/en" value="en" name="serverLanguage" onchange="changed(this);"/>&nbsp;English
+			    &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" id="serverLanguage/fr" value="fr" name="serverLanguage" onchange="changed(this);"/>&nbsp;Français
+            <br>
+			<label data-i18n-key="deviceName">Managed device name:</label>&nbsp;<input type="text" id="deviceName" maxlen="128" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="onCommand">Turn on command:</label>&nbsp;<input type="text" id="onCommand" maxlen="128" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="offCommand">Turn off command:</label>&nbsp;<input type="text" id="offCommand" maxlen="128" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="stateCommand">Display state command:</label>&nbsp;<input type="text" id="stateCommand" maxlen="128" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="allowedNumbers">Allowed numbers:</label>&nbsp;<input type="text" id="allowedNumbers" maxlen="255" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="onButton">Turn on button:</label>&nbsp;<input type="text" id="onButton" maxlen="32" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="offButton">Turn off button:</label>&nbsp;<input type="text" id="offButton" maxlen="32" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="onState">Display on state as:</label>&nbsp;<input type="text" id="onState" maxlen="32" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="offState">Display off state as:</label>&nbsp;<input type="text" id="offState" maxlen="32" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="startState">Power on state</label>
+                &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" id="startState/off" value="off" name="startState" onchange="changed(this);"/>&nbsp;<label data-i18n-key="startupOff">Off</label>
+                &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" id="startState/on" value="on" name="startState" onchange="changed(this);"/>&nbsp;<label data-i18n-key="startupOn">On</label>
+                &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" id="startState/previous" value="previous" name="startState" onchange="changed(this);"/>&nbsp;<label data-i18n-key="startupPrevious">Previous</label>
+            <br>
+            <hr />
+			<label data-i18n-key="ssid">Wifi SSID:</label>&nbsp;<input type="text" id="ssid" maxlen="32" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="pwd">Password:</label>&nbsp;<input type="text" id="pwd" maxlen="32" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="name">Module name:</label>&nbsp;<input type="text" id="name" maxlen="32" size="32" onchange="changed(this);"/><br>
+			<hr />
+			<label data-i18n-key="ntpServer">Turn off button:</label>&nbsp;<input type="text" id="ntpServer" maxlen="64" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="ntpParameters">Turn off button:</label>&nbsp;<input type="text" id="ntpParameters" maxlen="64" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="syslogServer">Syslog server:</label>&nbsp;<input type="text" id="syslogServer" maxlen="64" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="syslogPort">Syslog port:</label>&nbsp;<input type="number" id="syslogPort" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="mqttServer">MQTT server:</label>&nbsp;<input type="text" id="mqttServer" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="mqttPort">MQTT port:</label>&nbsp;<input type="number" id="mqttPort" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="mqttUser">MQTT username:</label>&nbsp;<input type="text" id="mqttUser" maxlen="64" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="mqttPasw">MQTT password:</label>&nbsp;<input type="text" id="mqttPasw" maxlen="64" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="mqttSendTopic">MQTT topic containing SMS to send:</label>&nbsp;<input type="text" id="mqttSendTopic" maxlen="128" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="mqttReceivedTopic">MQTT topic containing received SMS:</label>&nbsp;<input type="text" id="mqttReceivedTopic" maxlen="128" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="mqttCommandTopic">MQTT topic containing commands to execute:</label>&nbsp;<input type="text" id="mqttCommandTopic" maxlen="128" size="32" onchange="changed(this);"/><br>
+			<label data-i18n-key="mqttLwtTopic">MQTT root topic to read nodes status:</label>&nbsp;<input type="text" id="mqttLwtTopic" maxlen="128" size="32" onchange="changed(this);"/><br>
+            <hr />
+            <label data-i18n-key="traceCode">Display code traces</label>&nbsp;<input type="checkbox" id="traceCode" onchange="changed(this);"/><br>
+			<label data-i18n-key="traceDebug">Display modules traces</label>&nbsp;<input type="checkbox" id="traceDebug" onchange="changed(this);"/><br>
+			<label data-i18n-key="traceJava">Display Java traces</label>&nbsp;<input type="checkbox" id="traceJava" onchange="changed(this);"/><br>
+			<hr />
+		</div> 
+		<div id="messages" class="largeScroll"></div>
+		<hr />
+	</body>
+</html>

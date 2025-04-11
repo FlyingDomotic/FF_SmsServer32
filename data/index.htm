@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+	<!-- Main page of SMS server -->
+	<head>
+		<meta charset="utf-8" />
+		<title>Serveur SMS</title>
+			<link rel="stylesheet" href="style.css" type="text/css" />
+			<script src="translate.js"></script>
+			<script src="logic.js"></script>
+            <script>
+                function loadEdit() {window.location.href = "./edit.htm";}      // Display edit page
+                function loadSetup() {window.location.href = "./setup.htm";}    // Display setup page
+                function turnOn() {trigger("/command/turnOn");}
+                function turnOff() {trigger("/command/turnOff");}
+            </script>
+	</head>
+    <body onload="initAll(false);">
+        <div id="header" class="header">
+            <label id="deviceName">device</label>&nbsp;<label id="relayState">???</label><br>
+            <hr />
+            <input type="button" class="blueBtn" style="width:200px" id="onButton" value="On" onclick="turnOn();"/>
+            &nbsp;&nbsp;&nbsp;
+            <input type="button" class="blueBtn" style="width:200px" id="offButton" value="Off" onclick="turnOff();"/>
+        </div>
+        <hr />
+        <div>
+            <label data-i18n-key="state"></label><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<label id="powerMode"></label><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<label id="wifiState"></label><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<label id="smsState"></label><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<label data-i18n-key="gsmState">GSM state:</label>&nbsp;<label id="gsmState"></label><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<label data-i18n-key="listeningNodes">Listening nodes:</label>&nbsp;<label id="listeningNodes"></label><br>
+            <br>
+            <label data-i18n-key="lastSentMessage"></label>&nbsp;<label id="lastSentMessage"></label><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<label data-i18n-key="on">on </label><label id="lastSentDate"></label>
+                <label data-i18n-key="to">to </label><label id="lastSentNumber"></label><br>
+            <br>
+            <label data-i18n-key="lastReceivedMessage"></label>&nbsp;<label id="lastReceivedMessage"></label><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<label data-i18n-key="on">on </label><label id="lastReceivedDate"></label>
+                &nbsp;<label data-i18n-key="from">from </label><label id="lastReceivedNumber"></label><br>
+        </div>
+        <hr />
+        <div class="center">
+            <input type="button" class="blueBtn" style="width:200px" data-i18n-key="setup" value="Setup" onclick="loadSetup();"/>
+            &nbsp;&nbsp;&nbsp;
+            <input type="button" class="blueBtn" style="width:200px" data-i18n-key="edit" value="Edit" onclick="loadEdit();"/>
+        </div>
+        <hr />
+        <div id="messages" class="smallScroll"></div>
+        <hr />
+    </body>
+</html>
