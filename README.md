@@ -41,6 +41,16 @@ Un exemple en Python permet de recevoir des commandes système par SMS et de ren
 
 Un plug-in Domoticz est disponible à https://github.com/FlyingDomotic/domoticz-ff_smsserver-plugin
 
+## Typical use cases/Utilisations typiques
+
+- Control a relay (to activate heating) in your secondary house without any connection means other than SMS
+- Add SMS functions to you automation and Linux systems
+- Both: Send/receive SMS from/to your automation and Linux system, allowing to commad relay/opto-coupler to phyically interact with your devices, like reset or power recycling
+
+- Contrôle un relai dans une  maison de campagne (pour activer le chauffage par exemple), sans autre connecxion que SMS
+- Ajout de fonctions SMS à un système domotique et des machines Linux
+- Les deux : recevoir/envoyer des messages à une domotique et et des systèmes Linux, tout en commandant des relais ou opto-coupleurs pour interégir avec vos équipements, comme les redémarrer ou recycler leur alimentation.
+
 ## Prerequisites/Prérequis
 
 Can be used directly with Arduino IDE or PlatformIO./Peut être utilisé directement avec l'IDE Arduino ou PlatforIO.

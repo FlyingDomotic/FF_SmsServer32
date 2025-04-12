@@ -1,4 +1,4 @@
-#define VERSION "25.4.11-1"
+#define VERSION "25.4.12-1"
 
 /*
  *     English: SMS Web server based on ESP32/SIM7xxx with optional relay
@@ -26,6 +26,18 @@
  *          Un exemple en Python permet de recevoir des commandes système par SMS et de renvoyer les logs par SMS ou mail?
  *          Un plug-in Domoticz est disponible à https://github.com/FlyingDomotic/domoticz-ff_smsserver-plugin
  *
+ *  Typical use cases
+ *      Control relay (to activate heating) in your secondary house without any connection means other than SMS
+ *      Add SMS functions to you automation and Linux systems
+ *      Both: Send/receive SMS from/to your automation and Linux system, allowing to commad relay/opto-coupler
+ *          to phyically interact with your devices, like reset or power recycling)
+ * 
+ *  Utilisations typiques:
+ *      Contrôle un relai dans une  maison de campagne (pour activer le chauffage par exemple), sans autre connecxion que SMS
+ *      Ajout de fonctions SMS à un système domotique et des machines Linux
+ *      Les deux : recevoir/envoyer des messages à une domotique et et des systèmes Linux, tout en commandant des relais ou
+ *          opto-coupleurs pour interégir avec vos équipements, comme les redémarrer ou recycler leur alimentation.
+ * 
  *  Hardware
  *      ESP32 with SIM7XXX series GSM board (either LilyGo T SIM7070 or individual components)
  *      Optional relay
@@ -72,6 +84,18 @@
  *          cas, souder un condensateur de 100 uF entre la masse et le 3.3V (votre configuration peut necéssiter
  *          un condensateur plus gros).
  *
+ *  Remark:
+ *      Code incorporate references to ESP8266. As of now, only basic functions have been tested. In particular, no
+ *          tests have been done with SIM7xxx modem, as I did only have soldered with an ESP32. Be anyway aware that
+ *          memory is limited on ESP8266, and OOM messages are likely to occur. However, feedbacks and change
+ *          requests are welcome!
+ *
+ *  Remarque :
+ *      Le code contient des références à l'ESP8266. A ce jour, seules les fonctions le plus basiques ont été testées.
+ *          En particulier, aucun test n'a été réalisé avec un modem SIM7xxx, le seul que je possède est soudé sur une
+ *          carte avec un ESP32. Pas de faux espoirs, la mémoire est limitée sur un ESP8266, et les messages "plus de
+ *          mémoire disponible" très probables. Cependant, les retours et les demandes de modifications sont bienvenus !
+ *          
  *  Available URL
  *      /           Root page
  *      /status     Returns status in JSON format
@@ -620,7 +644,6 @@ trace_callback(traceCallback) {
                     syslog.log(LOG_DEBUG, _message);
                     break;
             }
-            ////delay(1);                                               // Avoid overflooding UDP
         }
     #endif
 }
@@ -1368,8 +1391,16 @@ void mqttLoop (void) {
     unsigned long now = millis();
     if ((now - lastMqttcheck) > MQTT_CHECK_STATE_EVERY) {
         lastMqttcheck = now;
+        if (WiFi.status() == WL_CONNECTED) {                        // Is WiFi connected
         if (!mqttClient.connected()) {                              // Is MQTT client disconnected?
             mqttConnect();                                          // Try to (re)connect
+        }
+        } else {                                                    // WiFi not connected
+            ssid.trim();
+            if (ssid != "") {                                       // SSID defined?
+                WiFi.disconnect();                                  // Disconnect from WiFi
+                WiFi.begin(ssid.c_str(), pwd.c_str());              // Reconnect to existing SSID
+            }
         }
     }
 }
@@ -2208,6 +2239,7 @@ void setup(void) {
             WiFi.mode(WIFI_MODE_APSTA);                             // Set both AP & station
         #endif
         #ifdef ESP8266
+            WiFi.setAutoReconnect(true);                            // Autoreconnect WiFi
             WiFi.mode(WIFI_AP_STA);                                 // Set both AP & station
         #endif
     }
