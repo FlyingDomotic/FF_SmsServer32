@@ -13,7 +13,7 @@ With a battery, it can also detect and signal power failure and restoration by S
 
 It can also be connected to MQTT and/or Serial in order to read SMS to be sent and write those received.
 
-Setup is done using an embeded web server, either through a local access point or connected to an existing one.
+Setup is done using an embedded web server, either through a local access point or connected to an existing one.
 
 Log can be requested by API, and/or sent to a Syslog server.
 
@@ -45,11 +45,11 @@ Un plug-in Domoticz est disponible à https://github.com/FlyingDomotic/domoticz-
 
 - Control a relay (to activate heating) in your secondary house without any connection means other than SMS
 - Add SMS functions to you automation and Linux systems
-- Both: Send/receive SMS from/to your automation and Linux system, allowing to commad relay/opto-coupler to phyically interact with your devices, like reset or power recycling
+- Both: Send/receive SMS from/to your automation and Linux system, allowing to command relay/opto-coupler to physically interact with your devices, like reset or power recycling
 
-- Contrôle un relai dans une  maison de campagne (pour activer le chauffage par exemple), sans autre connecxion que SMS
+- Contrôle un relai dans une  maison de campagne (pour activer le chauffage par exemple), sans autre connexion que SMS
 - Ajout de fonctions SMS à un système domotique et des machines Linux
-- Les deux : recevoir/envoyer des messages à une domotique et et des systèmes Linux, tout en commandant des relais ou opto-coupleurs pour interégir avec vos équipements, comme les redémarrer ou recycler leur alimentation.
+- Les deux : recevoir/envoyer des messages à une domotique et et des systèmes Linux, tout en commandant des relais ou opto-coupleurs pour interagir avec vos équipements, comme les redémarrer ou recycler leur alimentation.
 
 ## Prerequisites/Prérequis
 
@@ -73,7 +73,7 @@ cd [where_you_want_to_install_it]
 git clone https://github.com/FlyingDomotic/FF_SmsServer32.git FF_SmsServer32
 ```
 
-Cloner le dépot quelque part sur votre disque
+Cloner le dépôt quelque part sur votre disque
 ```
 cd [là_où_on_veut_l'installer]
 git clone https://github.com/FlyingDomotic/FF_SmsServer32.git FF_SmsServer32
@@ -159,7 +159,7 @@ Par défaut, les pinoches suivantes sont définies dans le fichier preference.h 
 
 ESP32 may reboot between USB power loss and before battery gets back. In this case, solder a 100uF capacitor between GND and 3.3V rail (your configuration may need a larger capacitor).
  
-L'ESP32 peut redémarrer entre la disparition de l'alimentation USB et le retour de la batterie. Dans ce cas, souder un condensateur de 100 uF entre la masse et le 3.3V (votre configuration peut necéssiter un condensateur plus gros).
+L'ESP32 peut redémarrer entre la disparition de l'alimentation USB et le retour de la batterie. Dans ce cas, souder un condensateur de 100 uF entre la masse et le 3.3V (votre configuration peut nécessiter un condensateur plus gros).
 
 ## Remark/Remarque:
 
@@ -177,7 +177,7 @@ You may send a SMS:
 On peut envoyer un SMS :
 - par une requête HTTP à `http://[nom ou IP du serveur SMS]/rest/send&number=[numéro de téléphone]&message=[message à envoyer]`. Etant une requête HTTP, les éléments sont à spécifier comme d'habitude (par exemple, remplacer les espaces par des +, et les caractères spécieux par leur équivalent en hexadécimal).
 - en envoyant `{"number":"[numéro de téléphone]", "message":"[message à envoyer]"}` au sujet MQTT `mqttGetTopic` (probablement quelque chose comme `smsServer/toSend`)
-- en envoyant `{"number":"[numéro de téléphone]", "message":"[message à envoyer]"}` sur le port série. La réponse seau au format `{"status":"[état de la soumission]"}`.
+- en envoyant `{"number":"[numéro de téléphone]", "message":"[message à envoyer]"}` sur le port série. La réponse sera au format `{"status":"[état de la soumission]"}`.
 
 ## How to get a SMS/Comment recevoir un SMS ??
 
@@ -186,7 +186,7 @@ You may get a copy of each received message by:
 - scanning Serial for messages like `{"number":"[phone number of sender]", "date":"[receive date]", "message":"[Message sent to SMS server]"}`
 
 Il est possible de recevoir une copie des SMS reçus en :
-- s'abonnant au sujet MQTT `mqttSendTopic` (propablement `smsServer/received`). Le format des messages reçus est `{"number":"[téléphone de l'émetteur]", "date":"[date de réception]", "message":"[Message envoyé au serveur SMS]"}`.
+- s'abonnant au sujet MQTT `mqttSendTopic` (probablement `smsServer/received`). Le format des messages reçus est `{"number":"[téléphone de l'émetteur]", "date":"[date de réception]", "message":"[Message envoyé au serveur SMS]"}`.
 - en repérant sur le port série des messages au format `{"number":"[téléphone de l'émetteur]", "date":"[date de réception]", "message":"[Message envoyé au serveur SMS]"}`.
 
 ## Parameters at compile time/Paramètres définis au moment de la compilation
@@ -205,23 +205,23 @@ The following parameters are used at compile time:
 - FF_TRACE_USE_SERIAL: (default=defined) Send trace messages on Serial (optional)
 - FF_DISABLE_DEFAULT_TRACE: (default=not defined) Disable default trace callback (optional)
 
-Les paramètres suivants sont définis au moment de la compilatiton :
-- FF_SIM7000_USE_SERIAL1: (défaut=defined) SIM7000 est connecté sur Serial1
-- FF_SIM6000_SET_TIME_FROM_GSM_NETWORK: (défaut=defined) utiliser le temps donné par le réseau GSM (optionnel)
-- SERIAL_COMMANDS: (défaut=defined) utiliser les commandes passées sur le lien série (optionnel)
-- SEND_SMS_FROM_SERIAL: (défaut=defined) autoriser l'envoi de SMS depuis le lien série (optionnel)
-- PRINT_RECEIVED_SMS_ON_SERIAL: (défaut=defined) afficher les messages reçus sur le lien série (optionnel)
-- LED_PIN: (défautin preferences.h=12) définit la pinoche sur laquelle la LED de répétition du relais (optionnel)
-- LED_INVERTED: (défaut in preferences.h=defined) les niveaux de la LED de répétition du relais sont inversés (allumé au niveau bas) (optionnel)
-- FF_TRACE_NO_SOURCE_INFO: (défaut=defined) supprime le nom de fichier, de mudule et le numéro de ligne des traces (optionnel)
+Les paramètres suivants sont définis au moment de la compilation :
+- FF_SIM7000_USE_SERIAL1: (défaut=défini) SIM7000 est connecté sur Serial1
+- FF_SIM6000_SET_TIME_FROM_GSM_NETWORK: (défaut=défini) utiliser le temps donné par le réseau GSM (optionnel)
+- SERIAL_COMMANDS: (défaut=défini) utiliser les commandes passées sur le lien série (optionnel)
+- SEND_SMS_FROM_SERIAL: (défaut=défini) autoriser l'envoi de SMS depuis le lien série (optionnel)
+- PRINT_RECEIVED_SMS_ON_SERIAL: (défaut=défini) afficher les messages reçus sur le lien série (optionnel)
+- LED_PIN: (défaut dans preferences.h=12) définit la pinoche sur laquelle la LED de répétition du relai (optionnel)
+- LED_INVERTED: (défaut in preferences.h=défini) les niveaux de la LED de répétition du relai sont inversés (allumé au niveau bas) (optionnel)
+- FF_TRACE_NO_SOURCE_INFO: (défaut=défini) supprime le nom de fichier, de module et le numéro de ligne des traces (optionnel)
 - FF_TRACE_KEEP_ALIVE: (défaut=5 * 60 * 1000) Délai de maintient en vie de la trace (optionnel)
-- FF_TRACE_USE_SYSLOG: (défaut=defined) Envoie les messages de trace sur syslog (optionnel)
-- FF_TRACE_USE_SERIAL: (défaut=defined) Envoie les messages de trace sur le lien série (optionnel)
-- FF_DISABLE_DEFAULT_TRACE: (défaut=not defined) Désactive le code de trace par défaut (optionnel)
+- FF_TRACE_USE_SYSLOG: (défaut=défini) Envoie les messages de trace sur syslog (optionnel)
+- FF_TRACE_USE_SERIAL: (défaut=défini) Envoie les messages de trace sur le lien série (optionnel)
+- FF_DISABLE_DEFAULT_TRACE: (défaut=pas défini) Désactive le code de trace par défaut (optionnel)
 
 ## Parameters defined at run time/Paramètres définis lors de l'exécution
 
-The following parameters can be defined, either in json files before loading LittleFS file system, or through internal http server.
+The following parameters can be defined, either in json files before loading LittleFS file system, or through internal HTTP server.
 
 Les paramètres suivants peuvent être définis, soit dans le fichier json avant le chargement du système de fichiers, où au travers du serveur HTTP interne.
 
@@ -232,12 +232,14 @@ Les paramètres suivants peuvent être définis, soit dans le fichier json avant
 - name: (default="smsServer") network name of ESP module
 - traceDebug: (default=true) activate debug traces in log
 - traceCode: (default=true) activate code traces in log
-- traceJava: (default=false) activate debug java traces in java console
+- traceJava: (default=false) activate debug Java traces in Java console
 - serverLanguage: (default="en") language to use for module user's messages (can be "en" or "fr", you can add your own creating a lang_xx.json file in flash from either lang_fr.json or lang_en.json and translate values in your language)
 - deviceName: (default="My device") device name displayed on HTTP and in SMS messages
 - onCommand: (default="on") command to send to turn device on
 - offCommand: (default="off") command to send to turn device off
-- stateCommand: (deault="state") command to send to receive device state
+- stateCommand: (default="state") command to send to receive device state
+- helpCommand: (default="help") command to send to get help text
+- localPrefix: (default="") prefix to add in front of each command for SMS server
 - onButton: (default="Turn on") name to display into "on" button
 - offButton: (default="Turn off") name to display into "off" button
 - onState: (default "is on") text to display after device name when it is on
@@ -247,7 +249,7 @@ Les paramètres suivants peuvent être définis, soit dans le fichier json avant
 - syslogServer: (default="") name or IP of syslog server
 - syslogPort: (default=514) port of syslog server
 - ntpServer: (default= "") name or IP of NTP server to use
-- ntpParameters: (default="CET-1CEST,M3.5.0,M10.5.0/3") specification of time zone (should be sepcified when using either NTP or GSM network for time synchronization)
+- ntpParameters: (default="CET-1CEST,M3.5.0,M10.5.0/3") specification of time zone (should be specified when using either NTP or GSM network for time synchronization)
 - mqttServer: (default="") name or IP of MQTT server
 - mqttPort: (default=1883) port of MQTT server
 - mqttUser: (default="") user name to use to identify on MQTT server
@@ -256,7 +258,7 @@ Les paramètres suivants peuvent être définis, soit dans le fichier json avant
 - mqttReceivedTopic: (default="smsServer/received") MQTT topic for SMS server to write SMS received
 - mqttLwtTopic: (default="smsServer/LWT") Root topic for SMS server to write it's state, and base topic to read connected node state
 
-- ssid: (défaut="") SSID du réseau WiFi existant sur lequel se connecter (le module va créer son propore point d'accès si vide)
+- ssid: (défaut="") SSID du réseau WiFi existant sur lequel se connecter (le module va créer son propre point d'accès si vide)
 - pwd: (défaut="") mot de passe du réseau WiFi existant sur lequel se connecter (pas de mot de passe si vide)
 - name: (défaut="smsServer") nom réseau de l'ESP
 - traceDebug: (défaut=true) active les traces de déverminage dans le log
@@ -267,6 +269,8 @@ Les paramètres suivants peuvent être définis, soit dans le fichier json avant
 - onCommand: (défaut="on") commande à envoyer pour activer le dispositif
 - offCommand: (défaut="off") commande à envoyer pour désactiver le dispositif
 - stateCommand: (défaut="state") commande à envoyer pour afficher l'état du dispositif
+- helpCommand: (défaut="help") commande à envoyer pour afficher l'aide
+- localPrefix: (défaut="") préfixe à ajouter devant chaque commande envoyée au serveur SMS
 - onButton: (défaut="Turn on") texte à afficher dans le bouton d'activation
 - offButton: (défaut="Turn off") texte à afficher dans le bouton de désactivation
 - onState: (défaut "is on") texte à afficher derrière le nom du dispositif lorsqu'il est actif
@@ -276,14 +280,14 @@ Les paramètres suivants peuvent être définis, soit dans le fichier json avant
 - syslogServer: (défaut="") nom ou adresse IP du serveur syslog
 - syslogPort: (défaut=514) numéro de port du serveur syslog
 - ntpServer: (défaut= "") nom ou adresse IP du serveur NTP
-- ntpParameters: (défaut="CET-1CEST,M3.5.0,M10.5.0/3") définition du fuseau hoarire (doit être renseigné lorqu'on utilise un serveur NTP ou le réseau GSM pour synchroniser le temps)
+- ntpParameters: (défaut="CET-1CEST,M3.5.0,M10.5.0/3") définition du fuseau horaire (doit être renseigné lorsqu'on utilise un serveur NTP ou le réseau GSM pour synchroniser le temps)
 - mqttServer: (défaut="") nom ou adresse IP du serveur MQTT
-- mqttPort: (défaut=1883) numero de port du serveur MQTT
-- mqttUser: (défaut="") utilisateur à utiliser pendant l'autentification au serveur MQTT
-- mqttPasw: (défaut="") mot de passe à utiliser pendant l'autentification au serveur MQTT
+- mqttPort: (défaut=1883) numéro de port du serveur MQTT
+- mqttUser: (défaut="") utilisateur à utiliser pendant l’authentification au serveur MQTT
+- mqttPasw: (défaut="") mot de passe à utiliser pendant l’authentification au serveur MQTT
 - mqttSendTopic: (défaut="smsServer/toSend") sujet MQTT utilisé par le serveur SMS pour lire les messages SMS à envoyer
 - mqttReceivedTopic: (défaut="smsServer/received") sujet MQTT ou le serveur SMS écrit les SMS reçus
-- mqttLwtTopic: (défaut="smsServer/LWT") Sujet MQTT racine où le serveur SMS écrit son état, et sujet de base où on lit l'état des noeuds connectés
+- mqttLwtTopic: (défaut="smsServer/LWT") Sujet MQTT racine où le serveur SMS écrit son état, et sujet de base où on lit l'état des nœuds connectés
 
 ## Available URLs/URL disponibles
 
@@ -292,8 +296,8 @@ WebServer answers to the following URLs:
  *      /status     Returns status in JSON format
  *      /setup      Display setup page
  *      /command    Supports the following commands
- *          /turnOn     Active le relais
- *          /turnOff    désactive le relais
+ *          /turnOn     Activate relay
+ *          /turnOff    Deactivate relay
  *      /languages  Return list of supported languages
  *      /settings   Returns settings in JSON format
  *      /debug      Display internal variables to debug
@@ -314,20 +318,20 @@ Le serveur Web répond aux URL suivantes :
  *      /status     Retourne l'état sous forme JSON
  *      /setup      Affiche la page de configuration
  *      /command    Supporte les commandes suivantes :
- *          /turnOn     Active le relais
- *          /turnOff    désactive le relais
- *      /languages  Returne la liste des langues supportées
+ *          /turnOn     Active le relai
+ *          /turnOff    désactive le relai
+ *      /languages  Retourne la liste des langues supportées
  *      /settings   Retourne la configuration au format JSON
  *      /debug      Affiche les variables internes pour déverminer
  *      /log        Retourne le log mémorisé
  *      /edit       Gère et édite le système de fichier
  *      /changed    Change la valeur d'une variable (utilisation interne)
- *      /rest       Execute une commande de type API
+ *      /rest       Exécute une commande de type API
  *          /params&number=123456&message=Ceci+est+un+message+de+test
  *          /send&number=123456&message=Ceci+est+un+message+de+test
  *                      Envoie un SMS "Ceci est un message de test" au numéro de téléphone 123456
  *          /listening
- *                      Retourne la liste des noeuds/applications à l'écoute
+ *                      Retourne la liste des nœuds/applications à l'écoute
  *          /restart
  *                      Redémarre l'ESP
 
@@ -343,7 +347,7 @@ Debug is available sending the command on Serial and/or MQTT (if MQTT server is 
 Debug output is available on Serial and Syslog. Note that settings can disable some of these outputs.
 
 Le déverminage est disponible en envoyant des commandes sur le port série et/ou par MQTT (si le serveur MQTT est défini)
-Debug output is available on Serial and Syslog. Note that settings can disable some of these outputs.
+La sortie du déverminage est disponible sur le lien série et sur syslog. Noter que les paramètres peuvent supprimer certaines de ces sorties.
 
 ### Commands/Commandes
 
@@ -358,7 +362,7 @@ The following commands are allowed:
 - enable local enter: enable code routine entering flag
 - disable local enter: disable code routine entering flag
 - enable modem debug: enable SIM7000 modem debug flag
-- disable modem debug: diable SIM7000 modem debug flag
+- disable modem debug: disable SIM7000 modem debug flag
 - enable modem trace: enable SIM7000 modem trace flag
 - disable modem trace: disable SIM7000 modem trace flag
 - enable modem enter: enable SIM7000 modem routine entering flag
@@ -397,7 +401,7 @@ Format: `{"number":"[phone number of sender]", "date":"[receive date"], "message
 
 Sujet MQTT utilisé par le serveur SMS pour écrire les SMS reçus
 Par exemple: `smsServer/received`
-Format: `{"number":"[numéro de téléphone de l'émmeteur]", "date":"[date de réception"], "message":"[Message reçu par le serveur SMS]"}`
+Format: `{"number":"[numéro de téléphone de l’émetteur]", "date":"[date de réception"], "message":"[Message reçu par le serveur SMS]"}`
 
 ### mqttGetTopic
 
@@ -405,7 +409,7 @@ MQTT topic used by SMS server to read SMS messages to send to external destinati
 For example: `smsServer/toSend`
 Format: `{"number":"[phone number to send message to]", "message":"[Message to send]"}`
 
-Sujeet MQTT utilisé par le serveur SMS pour lire les SMS à envoyer à l'extérieur
+Sujet MQTT utilisé par le serveur SMS pour lire les SMS à envoyer à l'extérieur
 Par exemple: `smsServer/toSend`
 Format: `{"number":"[numéro de téléphone du destinatire]", "message":"[Message à envoyer]"}`
 
@@ -417,7 +421,7 @@ mqttLwtTopic will be used to:
 
 mqttLwtTopic est utilisé pour :
 - écrire l'état du serveur SMS (au niveau de la racine)
-- lire l'état des application aux niveaux inférieurs. Par exemple  : `smsServer/LWT` (suivi du nom de noeuds ou d'application, comme `smsServer/LWT/myNode`). Format: `{"state":"[Etat du npeud/de l'application]"}`, certainement "up" ou "down", affiché sur la page d'accueil, et retourné par l'appel à la page `/rest/listening`
+- lire l'état des application aux niveaux inférieurs. Par exemple  : `smsServer/LWT` (suivi du nom de nœuds ou d'application, comme `smsServer/LWT/myNode`). Format: `{"state":"[État du nœud/de l'application]"}`, certainement "up" ou "down", affiché sur la page d'accueil, et retourné par l'appel à la page `/rest/listening`
 
 ### mqttCommandTopic
 
@@ -425,7 +429,7 @@ MQTT topic to read debug commands to be executed
 For example: `smsServer/command`
 Format: `[Command to be executed]`
 
-Topic MQTT où lire les commands à exécuter
+Sujet MQTT où lire les commande à exécuter
 Par exemple: `smsServer/command`
 Format: `[Commande à exécuter]`
 
@@ -433,14 +437,14 @@ Format: `[Commande à exécuter]`
 
 Here's list of associated files
 
-Voici la liste des fichiers assocés
+Voici la liste des fichiers associés
 
 ### examples/readSms.py
 
-This example reads SMS and send them back to receiver, prefixing them with "Received :".
+This example reads SMS and send them back to receiver, prefixing them with "Received:".
 Basically useless, but a good starting point to be used as example for your own code.
 
-Cet exemple list des SMS et lres renvoie à l'expéditeur, en les préfixant par "Received :".
+Cet exemple liste des SMS et les renvoie à l'expéditeur, en les préfixant par "Received:".
 Pas très utile, mais un bon point de départ pour être utilisé comme exemple pour son propre code..
 
 ### examples/smsHandler.py
@@ -454,12 +458,12 @@ Traces are kept in a log file, rotated each week.
 
 MQTT and mail settings are to be set into file before running it, probably as a service.
 
-Lit les SMS reçu par MQTT, en isolant ceux qui commencent par le nom de noeud de la machine sur laquelle il tourne.
-Si le messages est pour ce noeud, il est exécuté comme commande système locale.
+Lit les SMS reçu par MQTT, en isolant ceux qui commencent par le nom de nœud de la machine sur laquelle il tourne.
+Si le messages est pour ce nœud, il est exécuté comme commande système locale.
 Résultat et erreurs sont envoyés par SMS.
 Si la réponse est inférieure à 70 caractères, elle sera également envoyée par mail.
-Sinon, le statut de la commande sera envoy par SMS.
-Les traces soont sauvegardées dans un ficher log, renouvellé chaque semaine.
+Sinon, le statut de la commande sera envoyé par SMS.
+Les traces sont sauvegardées dans un ficher log, renouvelé chaque semaine.
 
 Les paramètres MQTT et mail sont à définir dans un fichier avant de lancer le script, certainement en tant que service.
 
@@ -486,8 +490,8 @@ Définition du service pour le script examples/smsHandler.py.
 - cd [là où on veut]
 - chmod +x *.py
 - nano smsHandler.service
-	- trouver la ligne`User=` et remplacer `pi` par le nomd'utilisateur qui va lancer smsHandler.service
-	- trouver la ligne `ExecStart=` et remplacer `/home/pi` par le répertoir où smsHandler.service est install"
+	- trouver la ligne`User=` et remplacer `pi` par le nom d'utilisateur qui va lancer smsHandler.service
+	- trouver la ligne `ExecStart=` et remplacer `/home/pi` par le répertoire où smsHandler.service est installé
 	- Enregistrer le fichier modifié
 - sudo mv smsHandler.service /lib/systemd/system/
 - sudo chmod 644 /lib/systemd/system/smsHandler.service
@@ -497,13 +501,13 @@ Définition du service pour le script examples/smsHandler.py.
 ### examples/smsServerTest.py
 Check if SMS server is working correctly. It sends an SMS (using SMS server) to itself, and checks if it receive it back within a minute. If not, it sends a mail with error, and if smsServerRestartUrl is defined, sends a restart to SMS server.
 
-Vérifie si le serveur SMS fonctionne correctement. Il s'envoie un SMS (en utilisant le serveur SMS) et vérifie qu'il reçoit bien les SMS qu'il s'est auto-émis dans la minute. Sinon, il envoie un mail avec l'erreurn et si smsServerRestartUrl est défini, envoie une demande de rédémarrage au serveur SMS.
+Vérifie si le serveur SMS fonctionne correctement. Il s'envoie un SMS (en utilisant le serveur SMS) et vérifie qu'il reçoit bien les SMS qu'il s'est auto-émis dans la minute. Sinon, il envoie un mail avec l'erreur et si smsServerRestartUrl est défini, envoie une demande de redémarrage au serveur SMS.
 
 ### examples/smsServerTest.json
 JSON configuration file for examples/smsServerTest.py. Contains the following lines:
 - "mqttServer": IP address or name of MQTT server
 - "mqttPort": Port number of MQTT server (often 1883)
-- "mqttUser": Username to use with MQTT server (or empty if no username needed)
+- "mqttUser": User name to use with MQTT server (or empty if no user name needed)
 - "mqttPassword": Password of MQTT server (or empty if no password needed)
 - "mqttReceiveTopic": SMS server receive topic (default to "smsServer/received")
 - "mqttSendTopic": SMS server send topic (default to "smsServer/toSend")
@@ -513,13 +517,13 @@ JSON configuration file for examples/smsServerTest.py. Contains the following li
 - "smsServerRestartUrl": SMS server restart URL (like "http://<IP address or name of SMS server>/rest/restart") or empty, if no restarted requested.
 
 Fichier de configuration JSON pour examples/smsServerTest.py. Contient les lignes suivantes :
-- "mqttServer": Nom ou adresse IP du server MQTT
+- "mqttServer": Nom ou adresse IP du serveur MQTT
 - "mqttPort": numéro de port du serveur MQTT (souvent 1883)
-- "mqttUser": Nom d'utilisateur pour l'autentification au serveur MQTT (vide si pas nécessaire)
-- "mqttPassword": Mot de passe pour l'autentification au serveur MQTT (vide si pas nécessaire)
-- "mqttReceiveTopic": Topic MQTT où le serveur SMS écrit les SMS reçus(par défaut "smsServer/received")
-- "mqttSendTopic": Topic MQTT où le serveur SMS lit les SMS à émettre (par défaut "smsServer/toSend")
+- "mqttUser": Nom d'utilisateur pour l’authentification au serveur MQTT (vide si pas nécessaire)
+- "mqttPassword": Mot de passe pour l’authentification au serveur MQTT (vide si pas nécessaire)
+- "mqttReceiveTopic": Sujet MQTT où le serveur SMS écrit les SMS reçus(par défaut "smsServer/received")
+- "mqttSendTopic": Sujet MQTT où le serveur SMS lit les SMS à émettre (par défaut "smsServer/toSend")
 - "mailSender": adresse mail d'émission/réception
 - "mailServer": adresse IP ou nom du serveur de mail
 - "smsServerNumber": numéro de téléphone du serveur de SMS. Noter que ce numéro doit être dans la liste des numéros autorisés du serveur SMS.
-- "smsServerRestartUrl": URL de redémarrage du serveyr SMS (ldu genre "http://<adresse IP ou nom du serveur SMS>/rest/restart") ou vide si aucune redémarrage n'est souhaité.
+- "smsServerRestartUrl": URL de redémarrage du serveur SMS (du genre "http://<adresse IP ou nom du serveur SMS>/rest/restart") ou vide si aucune redémarrage n'est souhaité.

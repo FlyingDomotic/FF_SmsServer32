@@ -10,6 +10,8 @@
   "onCommand": "on",
   "offCommand": "off",
   "stateCommand": "state",
+  "helpCommand": "help",
+  "localPrefix": "",
   "onButton": "Turn on",
   "offButton": "Turn off",
   "onState": "is on",

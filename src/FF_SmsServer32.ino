@@ -1,15 +1,15 @@
-#define VERSION "25.4.12-1"
+#define VERSION "25.4.13-1"
 
 /*
  *     English: SMS Web server based on ESP32/SIM7xxx with optional relay
- *     Français : Serveur SMS Web à base d'ESP32/SIM7xxx avec relai optionel
+ *     Français : Serveur SMS Web à base d'ESP32/SIM7xxx avec relai optionnel
  *
  *  What's that?
  *      This module implements an ESP32 based Web server connected to a SIM7xxx GSM module allowing sending and receiving SMS.
  *          When an optional relay in installed, it can be locally (HTTP and API) and remotely (through SMS commands) switched.
  *          With a battery, it can also detect and signal power failure and restoration by SMS.
  *          It can also be connected to MQTT and/or Serial in order to read SMS to be sent and write those received.
- *          Setup is done using an embeded web server, either through a local access point or connected to an existing one.
+ *          Setup is done using an embedded web server, either through a local access point or connected to an existing one.
  *          Log can be requested by API, and/or sent to a Syslog server.
  *          Time can be provided either through GSM network or NTP server.
  *          A Python example is provided, to receive system commands through SMS and send back command's log by SMS or mail.
@@ -29,14 +29,14 @@
  *  Typical use cases
  *      Control relay (to activate heating) in your secondary house without any connection means other than SMS
  *      Add SMS functions to you automation and Linux systems
- *      Both: Send/receive SMS from/to your automation and Linux system, allowing to commad relay/opto-coupler
- *          to phyically interact with your devices, like reset or power recycling)
+ *      Both: Send/receive SMS from/to your automation and Linux system, allowing to command relay/opto-coupler
+ *          to physically interact with your devices, like reset or power recycling)
  * 
  *  Utilisations typiques:
- *      Contrôle un relai dans une  maison de campagne (pour activer le chauffage par exemple), sans autre connecxion que SMS
+ *      Contrôle un relai dans une  maison de campagne (pour activer le chauffage par exemple), sans autre connexion que SMS
  *      Ajout de fonctions SMS à un système domotique et des machines Linux
  *      Les deux : recevoir/envoyer des messages à une domotique et et des systèmes Linux, tout en commandant des relais ou
- *          opto-coupleurs pour interégir avec vos équipements, comme les redémarrer ou recycler leur alimentation.
+ *          opto-coupleurs pour interagir avec vos équipements, comme les redémarrer ou recycler leur alimentation.
  * 
  *  Hardware
  *      ESP32 with SIM7XXX series GSM board (either LilyGo T SIM7070 or individual components)
@@ -81,7 +81,7 @@
  *          capacitor between GND and 3.3V rail (your configuration may need a larger capacitor).
  *
  *      L'ESP32 peut redémarrer entre la disparition de l'alimentation USB et le retour de la batterie. Dans ce
- *          cas, souder un condensateur de 100 uF entre la masse et le 3.3V (votre configuration peut necéssiter
+ *          cas, souder un condensateur de 100 uF entre la masse et le 3.3V (votre configuration peut nécessiter
  *          un condensateur plus gros).
  *
  *  Remark:
@@ -101,8 +101,8 @@
  *      /status     Returns status in JSON format
  *      /setup      Display setup page
  *      /command    Supports the following commands
- *          /turnOn     Active le relais
- *          /turnOff    désactive le relais
+ *          /turnOn     Activate relay
+ *          /turnOff    Deactivate relay
  *      /languages  Return list of supported languages
  *      /settings   Returns settings in JSON format
  *      /debug      Display internal variables to debug
@@ -125,18 +125,18 @@
  *      /command    Supporte les commandes suivantes :
  *          /turnOn     Active le relais
  *          /turnOff    désactive le relais
- *      /languages  Returne la liste des langues supportées
+ *      /languages  Retourne la liste des langues supportées
  *      /settings   Retourne la configuration au format JSON
  *      /debug      Affiche les variables internes pour déverminer
  *      /log        Retourne le log mémorisé
  *      /edit       Gère et édite le système de fichier
  *      /changed    Change la valeur d'une variable (utilisation interne)
- *      /rest       Execute une commande de type API
+ *      /rest       Exécute une commande de type API
  *          /params&number=123456&message=Ceci+est+un+message+de+test
  *          /send&number=123456&message=Ceci+est+un+message+de+test
  *                      Envoie un SMS "Ceci est un message de test" au numéro de téléphone 123456
  *          /listening
- *                      Retourne la liste des noeuds/applications à l'écoute
+ *                      Retourne la liste des nœuds/applications à l'écoute
  *          /restart
  *                      Redémarre l'ESP
  *
@@ -235,6 +235,8 @@ String deviceName;                                                  // Managed d
 String onCommand;                                                   // Comma separated list of allowed "on" commands
 String offCommand;                                                  // Comma separated list of allowed "off" commands
 String stateCommand;                                                // Comma separated list of allowed "state" commands
+String helpCommand;                                                 // Comma separated list of allowed "help" commands
+String localPrefix;                                                 // Local prefix (can be empty)
 String onButton;                                                    // Label inside "on" button
 String offButton;                                                   // Label inside "off" button
 String onState;                                                     // Value to display when device is on
@@ -401,7 +403,8 @@ String getServerMessage(const char *key, const char *defaultValue);
 bool inString(const String candidate, const String listOfValues, const String separator = ",");
 String extractItem(const String candidate, const uint16_t index, const String separator = ",");
 void checkFreeBufferSpace(const char *function, const uint16_t line, const char *bufferName, const size_t bufferSize, const size_t bufferLen);
-bool isKnownCommand(const String givenCommand);
+bool isDebugCommand(const String givenCommand);
+bool isSmsCommand(const String givenCommand, bool sendSMS=false);
 
 //  ---- SMS stuff ----
 void smsSetup(void);
@@ -416,6 +419,7 @@ uint8_t pendingMessages(void);
 bool readRelayState(void);
 void writeRelayState(void);
 void sendCurrentState(void);
+void sendHelp(const char *command, const bool alsoSendSms=false);
 void updateWebServerData(void);
 void sendWebServerData(void);
 void signalRelayChanged(const bool alsoSendSms = true);
@@ -549,7 +553,7 @@ void syslogSetup(void) {
                 if (serialCommandLen) {
                     Serial.printf("Command: %s\n", serialCommand);
                     String command = serialCommand;
-                    if (isKnownCommand(command)) {
+                    if (isDebugCommand(command) || isSmsCommand(command)) {
                         // Command is known and already executed, do nothing
                     } else if (command.startsWith("{")) {
                         // Analyze JSON message (will fail if payload is empty)
@@ -739,6 +743,8 @@ void dumpSettings(void) {
     trace_info_P("onCommand = %s", onCommand.c_str());
     trace_info_P("offCommand = %s", offCommand.c_str());
     trace_info_P("stateCommand = %s", stateCommand.c_str());
+    trace_info_P("helpCommand = %s", helpCommand.c_str());
+    trace_info_P("localPrefix = %s", localPrefix.c_str());
     trace_info_P("onButton = %s", onButton.c_str());
     trace_info_P("offButton = %s", offButton.c_str());
     trace_info_P("onState = %s", onState.c_str());
@@ -788,6 +794,8 @@ bool readSettings(void) {
     onCommand = settings["onCommand"].as<String>();
     offCommand = settings["offCommand"].as<String>();
     stateCommand = settings["stateCommand"].as<String>();
+    helpCommand = settings["helpCommand"].as<String>();
+    localPrefix = settings["localPrefix"].as<String>();
     onButton = settings["onButton"].as<String>();
     offButton = settings["offButton"].as<String>();
     onState = settings["onState"].as<String>();
@@ -836,6 +844,8 @@ void writeSettings(void) {
     settings["onCommand"] = onCommand.c_str();
     settings["offCommand"] = offCommand.c_str();
     settings["stateCommand"] = stateCommand.c_str();
+    settings["helpCommand"] = helpCommand.c_str();
+    settings["localPrefix"] = localPrefix.c_str();
     settings["onButton"] = onButton.c_str();
     settings["offButton"] = offButton.c_str();
     settings["onState"] = onState.c_str();
@@ -1084,6 +1094,10 @@ void setChangedReceived(AsyncWebServerRequest *request) {
                 offCommand = fieldValue;
             } else if (fieldName == "stateCommand") {
                 stateCommand = fieldValue;
+            } else if (fieldName == "helpCommand") {
+                helpCommand = fieldValue;
+            } else if (fieldName == "localPrefix") {
+                localPrefix = fieldValue;
             } else if (fieldName == "onButton") {
                 onButton = fieldValue;
             } else if (fieldName == "offButton") {
@@ -1437,7 +1451,7 @@ static void onMqttMessage(char* topic, char* payloadPtr, AsyncMqttClientMessageP
         }
         sendSms(message, number);               // Ok, store the SMS in queue
     } else if (strTopic == mqttCommandTopic) {
-        if (!isKnownCommand(String(payload))) {
+        if (!isDebugCommand(String(payload)) || !isSmsCommand(String(payload))) {
             trace_error_P("Command %s is unknown", payload);
         }
     } else if (strTopic.startsWith(mqttLwtTopic)) {
@@ -1559,7 +1573,7 @@ String getServerMessage(const char *key, const char *defaultValue) {
         deserializeJson(jsonData, languageFile);                    // Read settings
         languageFile.close();                                       // Close file
         String dataValue = jsonData[key].as<String>();              // Return data
-        if (dataValue != "" && dataValue != NULL) {
+        if (dataValue != "null") {
             return dataValue;
         }
     }
@@ -1616,8 +1630,8 @@ void checkFreeBufferSpace(const char *function, const uint16_t line, const char 
     }
 }
 
-// Execute a command, received either by Serial or MQTT
-bool isKnownCommand(const String givenCommand) {
+// Execute a debug command, received either by Serial or MQTT
+bool isDebugCommand(const String givenCommand) {
 	String command = String(givenCommand);
 	if (command.startsWith("AT")) {
 		// Send an AT command
@@ -1658,6 +1672,30 @@ bool isKnownCommand(const String givenCommand) {
 		} else {
 			return false;
 		}
+    }
+	return true;
+}
+
+// Execute a SMS command, received either by SMS, Serial or MQTT
+bool isSmsCommand(const String givenCommand, bool alsoSendSms) {
+    String purgedMessage(unaccentuate(String(givenCommand), true));
+    purgedMessage.trim();
+    // Check for commands into received message
+    if (inString(purgedMessage, onCommand)) {
+        // We have a "on" command
+        activateRelay();
+    } else if (inString(purgedMessage, offCommand)) {
+        // We have a "off" command
+        deactivateRelay();
+    } else if (inString(purgedMessage, stateCommand)) {
+        // We have a "state" command
+        sendCurrentState();
+    } else if (inString(purgedMessage, helpCommand)) {
+        // We have a "help" command
+        sendHelp("", alsoSendSms);
+    } else {
+        // Unknown command
+        return false;
     }
 	return true;
 }
@@ -1721,18 +1759,25 @@ void readSmsCallback(const char* receivedNumber, const char* receivedDate, const
     updateWebServerData();
     // Check for a known sender phone number
     if (inString(String(receivedNumber), allowedNumbers )) {        // Sender is known
-        String purgedMessage(unaccentuate(String(receivedMessage), true));
-        purgedMessage.trim();
-        // Check for commands into received message
-        if (inString(purgedMessage, onCommand)) {
-            // We have a "on" command
-            activateRelay();
-        } else if (inString(purgedMessage, offCommand)) {
-            // We have a "off" command
-            deactivateRelay();
-        } else if (inString(purgedMessage, stateCommand)) {
-            // We have a "state" command
-            sendCurrentState();
+        // Check prefix if any
+        bool isOk = false;
+        // Are we waiting for a prefix?
+        if (localPrefix != "") {
+            size_t prefixLen = localPrefix.length();                // Prefix length
+            bool samePrefix = false;                                // Given previx is not our
+            // First, check for a space just after prefix
+            if (receivedMessage[prefixLen] == ' ') {
+                char prefix[prefixLen+1];                           // Extract prefix
+                strncpy(prefix, receivedMessage, prefixLen);
+                prefix[prefixLen] = 0;
+                if (inString(String(prefix), localPrefix)) {        // Check for unaccentuated lower case prefix
+                    samePrefix = true;                              // Tis is our prefix
+                }
+            } 
+            if (samePrefix) {                                       // This is our prefix
+                char *ptrStr = strstr(receivedMessage, " ");        // Locate first space
+                ptrStr++;                                           // Skip space
+                isOk = isSmsCommand(ptrStr, true);                  // Execute command
         } else {
             if (mqttServer != "") {
                 // Compose jsonMessage
@@ -1760,13 +1805,16 @@ void readSmsCallback(const char* receivedNumber, const char* receivedDate, const
                         trace_error_P("Publish to %s returned %d", mqttReceivedTopic.c_str(), result);
                     }
                 }
+                }
+                isOk = true;
+            } 
             } else {
-                // Prepare error text
-                char buffer[250];
-                snprintf(buffer, sizeof(buffer), getServerMessage("unknownCommand", "Can't understart %s, send %s or %s or %s").c_str(), purgedMessage.c_str(), onCommand.c_str(), offCommand.c_str(), stateCommand.c_str());
-                checkFreeBufferSpace(__func__, __LINE__, "buffer", sizeof(buffer), strlen(buffer));
-                sendSms(buffer);
+            // No prefix, check for SMS commands
+            isOk = isSmsCommand(receivedMessage, true);
             }
+        // This is not a knwon SMS command, send help message
+        if (!isOk) {
+            sendHelp(receivedMessage, true);
         }
     } else {
         trace_info_P("Bad sender %s", receivedNumber);              // Sender not in allowed list
@@ -1777,6 +1825,30 @@ void readSmsCallback(const char* receivedNumber, const char* receivedDate, const
 void sendSmsCallback(const char* receivedNumber, const char* receivedDate, const char* receivedMessage) {
     if (localEnterFlag) enterRoutine(__func__);
     updateWebServerData();
+}
+
+// Write help message (and send SMS if needed)
+void sendHelp(const char *command, const bool alsoSendSms) {
+    // Prepare error text
+    char buffer[250];
+    if (localPrefix != "") {
+        if (command[0]) {
+            snprintf(buffer, sizeof(buffer), getServerMessage("unknownPrefixCommand", "Can't understand %s, send %s followed by %s or %s or %s or %s").c_str(), command, localPrefix.c_str(), onCommand.c_str(), offCommand.c_str(), stateCommand.c_str(), helpCommand.c_str());
+        } else {
+            snprintf(buffer, sizeof(buffer), getServerMessage("helpPrefixText", "Send %s followed by %s or %s or %s or %s").c_str(), localPrefix.c_str(),  onCommand.c_str(), offCommand.c_str(), stateCommand.c_str(), helpCommand.c_str());
+        }
+    } else {
+        if (command[0]) {
+            snprintf(buffer, sizeof(buffer), getServerMessage("unknownCommand", "Can't understand %s, send %s or %s or %s or %s").c_str(), command, onCommand.c_str(), offCommand.c_str(), stateCommand.c_str(), helpCommand.c_str());
+        } else {
+            snprintf(buffer, sizeof(buffer), getServerMessage("helpText", "Send %s or %s or %s or %s").c_str(), onCommand.c_str(), offCommand.c_str(), stateCommand.c_str(), helpCommand.c_str());
+        }
+    }
+    checkFreeBufferSpace(__func__, __LINE__, "buffer", sizeof(buffer), strlen(buffer));
+    trace_info_P("%s", buffer);
+    if (alsoSendSms) {
+        sendSms(buffer);
+    }
 }
 
 // Extract one SMS from queue and send it
