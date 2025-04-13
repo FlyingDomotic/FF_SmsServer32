@@ -5,8 +5,10 @@ let traceJava = false;												// Trace this java code
 let messagesExtended = false;										// Is messages div extended?
 
 // Display message on console and messages HTML element
-function showMessage(message, displayOnBrowser = true) {
+function showMessage(message, displayOnBrowser = true, displayOnConsole = true) {
+    if (displayOnConsole) {
 	console.log(message);											// Display message on console
+    }
 	let messages = document.getElementById('messages');				// Messages from HTML document
 	if (messages && displayOnBrowser) {								// If messages exists in document
 		let messageElem = document.createElement('div');			// Create a div element
@@ -71,8 +73,11 @@ function setData(key, dataValue) {
     element = document.getElementById(key);
     if (element != null) {
         // Is there any check?
-      if (element.type == "checkbox") {
+        if (element.type == "checkbox") {                           // .type is loaded only for "INPUT xxx"
         element.checked = (String(dataValue).toLowerCase() == "true");
+        } else if (element.nodeName == "DIV" && key.substring(0,4).toLowerCase() == "hide") {
+            console.log(key+" is "+ String(dataValue));
+            element.hidden = (String(dataValue).toLowerCase() == "true");
       // For other elements
       } else {
         // If content is number but not integer (float)
@@ -148,7 +153,7 @@ function startEvents(getDataEvents){
 	});
 	es.addEventListener('info', (e) => {							// Executed when receiving an "info" event
 		if (e.data) {
-			showMessage(e.data);										// Set message error
+            showMessage(e.data, true, false);                       // Set message error
 		}
 	});
 	es.addEventListener('error', (e) => {							// Executed when receiving an "error" event
@@ -170,7 +175,7 @@ function changed(object, value="") {
 	showMessage("# Set changed "+object.id+":"+object.name+":"+object.value+" #", traceJava);
 	const req = new XMLHttpRequest();
   if (value !== "") {
-  		req.open("GET", location.origin+'/changed/'+object.id+"/"+value);		         // value is sent when given
+            req.open("GET", location.origin+'/changed/'+object.id+"/"+value); // Value is sent when given
   } else if (object.id.substring(0,5) == "trace" || object.id.substring(0,6) == "enable" || object.id.substring(0,3) == "led") {
   		req.open("GET", location.origin+'/changed/'+object.id+"/"+object.checked);		// .checked is send for checkboxes
   } else if (object.name !== "") {
@@ -209,4 +214,13 @@ function roundOf(n, p) {
 		return (n2 + 1) / Math.pow(10, p);
 	}
 	return n2 / Math.pow(10, p);
+}
+
+// Load all keys and values from an object
+var getKeysValues = function(obj) {
+    var keysValues = [];
+    for (var key in obj){
+       keysValues.push(key+"="+String(obj[key]));
+    }
+    return keysValues;
 }

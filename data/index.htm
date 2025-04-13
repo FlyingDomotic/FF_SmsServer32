@@ -16,8 +16,11 @@
 	</head>
     <body onload="initAll(false);">
         <div id="header" class="header">
-            <label id="deviceName">device</label>&nbsp;<label id="relayState">???</label><br>
+            <label id="serverName"></label>&nbsp;<label id="serverVersion"></label><br>
+        </div>
+        <div id="hideButtonDiv" hidden=false class="header">
             <hr />
+            <label id="deviceName">device</label>&nbsp;<label id="relayState">???</label><br><br>
             <input type="button" class="blueBtn" style="width:200px" id="onButton" value="On" onclick="turnOn();"/>
             &nbsp;&nbsp;&nbsp;
             <input type="button" class="blueBtn" style="width:200px" id="offButton" value="Off" onclick="turnOff();"/>

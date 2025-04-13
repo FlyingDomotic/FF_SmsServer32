@@ -1,4 +1,4 @@
-#define VERSION "25.4.13-1"
+#define VERSION "25.4.13-2"
 
 /*
  *     English: SMS Web server based on ESP32/SIM7xxx with optional relay
@@ -229,7 +229,7 @@ AsyncEventSource events("/events");                                 // Event roo
 
 String ssid;                                                        // SSID of local network
 String pwd;                                                         // Password of local network
-String espName = "SmsRelay";                                        // Name of this module
+String espName = "SmsServer";                                       // Name of this module
 String serverLanguage;                                              // This server language
 String deviceName;                                                  // Managed device name
 String onCommand;                                                   // Comma separated list of allowed "on" commands
@@ -2025,6 +2025,9 @@ void sendWebServerData(void) {
     if (localEnterFlag) enterRoutine(__func__);
     // Send new state to connected users
     JsonDocument data;
+    data["serverName"] = espName.c_str();
+    data["serverVersion"] = VERSION;
+    data["hideButtonDiv"] = deviceName != ""? "false" : "true";
     data["relayState"] = relayActive? onState : offState;
     data["powerMode"] = powerMode.c_str();
     data["wifiState"] = wifiState.c_str();
