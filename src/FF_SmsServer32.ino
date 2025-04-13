@@ -1,4 +1,4 @@
-#define VERSION "25.4.13-2"
+#define VERSION "25.4.13-3"
 
 /*
  *     English: SMS Web server based on ESP32/SIM7xxx with optional relay
@@ -2101,6 +2101,7 @@ void relaySetup(void) {
     } else {
         readRelayState();
     }
+    if (relayPin >=0) {
     // Set relay initial state
     if (reversedRelay) {
         digitalWrite(relayPin, relayActive? LOW : HIGH);
@@ -2108,7 +2109,8 @@ void relaySetup(void) {
         digitalWrite(relayPin, relayActive? HIGH : LOW);
     }
     pinMode(relayPin, OUTPUT);
-    // Set proper states by don't send SMS
+    }
+    // Set proper states but don't send SMS
     signalRelayChanged(false);
 }
 
@@ -2117,7 +2119,9 @@ void activateRelay(void) {
     if (localEnterFlag) enterRoutine(__func__);
     relayActive = true;
     signalRelayChanged();
+    if (relayPin >=0) {
     digitalWrite(relayPin, reversedRelay? LOW : HIGH);
+    }
 }
 
 // Used to deactivate relay
@@ -2125,7 +2129,9 @@ void deactivateRelay(void) {
     if (localEnterFlag) enterRoutine(__func__);
     relayActive = false;
     signalRelayChanged();
+    if (relayPin >=0) {
     digitalWrite(relayPin, reversedRelay? HIGH : LOW);
+    }
 }
 
 // --- Battery routines ---
