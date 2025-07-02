@@ -1,5 +1,5 @@
 {
-	"mqttServer": "<IpAddressOrNameOfMqttServer",
+	"mqttServer": "<IpAddressOrNameOfMqttServer>",
 	"mqttPort": <portOfMqttServerOften1883>,
 	"mqttUser": "<mqttUserNameOrEMpty>",
 	"mqttPassword": "<mqttPasswordOrEmpty>",
@@ -8,9 +8,9 @@
 	"mqttLwtTopic": "smsServer/LWT",
 	"mailSender": "<mailAddressOfSenderAndReceiver>",
 	"mailServer": "<ipAddressOrNameOfMailServer>",
-	"mailReceivers": {"<user1PhoneNumber": "user1MailAddress", "<user2PhoneNumber": "user2MailAddress", "<user3PhoneNumber": "user3MailAddress"},
+	"mailReceivers": {"<user1PhoneNumber": "<user1MailAddress>", "<user2PhoneNumber": "<user2MailAddress>", "<user3PhoneNumber": "<user3MailAddress>"},
 	"smsServerNumber": "<smsServerPhoneNumber>",
-	"smsServerRestartCommand": "http://<ipAddressOrNameOfSmsServer>/rest/restart",
+	"smsServerRestartCommand": "http://<ipAddressOrNameOfSmsServer>/admin/restart",
 	"shellName": "/bin/bash",
 	"shellInitCommand": "source ~/.profile; ",
 	"shellErrorRemove": "/bin/bash: line 1: "
